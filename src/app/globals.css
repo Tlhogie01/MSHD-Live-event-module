@@ -1,0 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+:root { --ink:#ffffff; --muted:#94a3b8; --line:#1b2234; --accent:#801b38; --cream:#090d16; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--cream); color:var(--ink); font-family:Inter,system-ui,-apple-system,sans-serif; }
+button,input,textarea,select { font:inherit; }
+a { color:inherit; text-decoration:none; }

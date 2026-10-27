@@ -1,0 +1,5 @@
+import {NextResponse} from "next/server";
+import type {RowDataPacket} from "mysql2/promise";
+import {getPool} from "@backend/lib/db";
+type Context={params:Promise<{reference:string}>};
+export async function GET(_request:Request,{params}:Context){const {reference}=await params;try{const [rows]=await getPool().execute<RowDataPacket[]>("SELECT o.order_reference,o.payment_status,o.quantity,o.total_amount,e.title,t.name AS ticket_name FROM ticket_orders o JOIN events e ON e.id=o.event_id JOIN event_tickets t ON t.id=o.ticket_id WHERE o.order_reference=? LIMIT 1",[reference]);if(!rows[0])return NextResponse.json({error:"Order not found."},{status:404});const [tickets]=await getPool().execute<RowDataPacket[]>("SELECT ticket_number,status FROM issued_tickets WHERE order_id=(SELECT id FROM ticket_orders WHERE order_reference=?) ORDER BY id",[reference]);return NextResponse.json({order:rows[0],tickets})}catch(error){console.error("Could not load ticket order",error);return NextResponse.json({error:"Could not load order status."},{status:503})}}
